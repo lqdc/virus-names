@@ -41,3 +41,10 @@ The following strategies are used to pick among the labeled antivirus names:
 
 - `language`, `compiler`, and `_type` are those that occur most often in the
   labeled set.
+
+Requirements:
+- Python 3.4
+- scikit-learn
+- python-Levenshtein
+- python-crfsuite
+- ujson
