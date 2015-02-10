@@ -52,10 +52,10 @@ from collections import defaultdict
 from pycrfsuite import Tagger
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-CRF_MODEL_PATH = "/Users/rsinayev/libs/crfsuite-0.12/example/all_train.model"
-TANIMOTO_MAPPING_PATH = "/Users/rsinayev/libs/crfsuite-0.12/example/tanimoto_mapping.json"
-VOCAB_PATH = "/Users/rsinayev/libs/crfsuite-0.12/example/tfidf_vocab.json"
-IDF_WEIGHTS_PATH = "/Users/rsinayev/libs/crfsuite-0.12/example/tfidf_idf.json"
+CRF_MODEL_PATH = "all_train.model"
+TANIMOTO_MAPPING_PATH = "tanimoto_mapping.json"
+VOCAB_PATH = "tfidf_vocab.json"
+IDF_WEIGHTS_PATH = "tfidf_idf.json"
 
 REGEX_NONWORD = re.compile("\W")
 REGEX_NONWORD_SAVED = re.compile("(\W)")
@@ -64,6 +64,7 @@ FAMILY = 'family'
 PLATFORM = 'platform'
 GROUP = 'group'
 IDENT = 'ident'
+GENERIC_FAMILIES = set(['Generic', 'Gen', 'GENERIC', 'Genetic'])
 OTHER_GUESSABLE_TAGS = ['language', 'compiler', '_type']
 
 AVS = set(['TotalDefense',
@@ -493,6 +494,11 @@ def guess_family(tfidf, tagger, av_dict, idx_to_words, postprocessors=[],
     m = tfidf.transform(tags)
     words_to_vals = {idx_to_words[idx]: val for idx, val in
                      zip(m.indices, m[0, m.indices].toarray()[0])}
+
+    # scale Generic family heuristic
+    words_to_vals.update(
+        {k: v/len(words_to_vals) for k, v in words_to_vals.items()
+         if k in GENERIC_FAMILIES})
 
     words_to_avs = defaultdict(list)
     for tag, av in zip(tags[0], avs):
