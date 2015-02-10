@@ -1,12 +1,13 @@
 # virus-names
-Virus names generator
+Virus names generator figures out the best family, type, language, platform, etc for a virus when given names by different AV vendors.
+
 Loads trained models and guesses virus names.
 
 Overall, the idea is to guess a name for a virus from the names that Antiviruses
 give it.
 
 When using the Guesser class, all Exceptions are wrapped in a
-NameGeneratorException.
+`NameGeneratorException`.
 
 Usage:
 ```python
@@ -23,6 +24,7 @@ Out[3]:
  'platform': 'Win32',
  'language': 'unknown'}
 ```
+
 All labels are guessed using CRFSUITE conditional random fields.
 For example, we would have two family labels in the example above:
 "AddInstall" and "InstalleRex".
